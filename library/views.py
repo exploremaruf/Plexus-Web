@@ -250,7 +250,7 @@ def return_book(request):
             issue = form.cleaned_data['issue_record']
 
 
-            fine = issue.get_fine()
+            fine = issue.get_fine
 
             issue.is_returned = True
             issue.return_date = date.today() 
