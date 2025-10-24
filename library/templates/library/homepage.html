@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plexus - Central Library Access</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #008080;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            padding: 8px 15px;
+            margin-left: 20px;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a.dashboard-link {
+            background-color: #FF4D00;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .nav-links a.dashboard-link:hover {
+            background-color: #e0e0e0;
+        }
+
+        .nav-links a.action-button {
+            background-color: #28a745;
+            color: #ffffff;
+            padding: 10px 20px;
+        }
+
+        .nav-links a.action-button:hover {
+            background-color: #218838;
+            color: #ffffff;
+        }
+
+        .content-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 80px);
+            text-align: center;
+        }
+
+        .welcome-box {
+            background-color: #ffffff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .welcome-box h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .welcome-box h2 .highlight-plexus {
+            color: #007bff;
+        }
+
+        .welcome-box p {
+            color: #777;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="navbar-brand">Plexus</a>
+        <div class="nav-links">
+
+            <a href="{% url 'dashboard' %}" class="dashboard-link">Go to Dashboard</a>
+
+            <a href="{% url 'login' %}" class="action-button">Login</a>
+            <a href="{% url 'register' %}" class="action-button">Register</a>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <div class="welcome-box">
+            <h2>Welcome to <span class="highlight-plexus">Plexus</span></h2>
+            <p>Your centralized network for managing knowledge resources.</p>
+        </div>
+    </div>
+
+</body>
+
+</html>

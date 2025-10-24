@@ -1,0 +1,125 @@
+{% extends "library/base.html" %}
+{% block title %}Book Catalogue{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <h2 class="fw-bold text-dark mb-0">
+            <i class="fas fa-book-atlas me-2 text-primary"></i> Complete Book Catalogue
+        </h2>
+        {% if user.is_staff or user.is_superuser %}
+        <a href="{% url 'add_book' %}" class="btn btn-success fw-bold shadow-sm">
+            <i class="fas fa-plus-circle me-1"></i> Add New Book
+        </a>
+        {% endif %}
+    </div>
+
+
+    <div class="card border-0 shadow-lg">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th scope="col">Title <i class="fas fa-sort-alpha-down-alt ms-1 opacity-75"></i></th>
+                            <th scope="col">Author</th>
+                            <th scope="col">ISBN/Call No.</th>
+                            <th scope="col">Category</th>
+                            <th scope="col" class="text-center">Total Qty</th>
+                            <th scope="col" class="text-center">Available Copies</th>
+                            <th scope="col" class="text-center">Action</th>
+                            
+                            {% if user.is_staff or user.is_superuser %}
+                                <th scope="col" class="text-center">Admin Actions</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                        <tr>
+                            <td class="fw-semibold">{{ book.title }}</td>
+                            <td class="text-muted">{{ book.author_name }}</td>
+                            <td>{{ book.isbn }}</td>
+                            <td><span class="badge bg-secondary">{{ book.book_type }}</span></td>
+                            <td class="text-center">{{ book.quantity }}</td>
+                            <td class="text-center">
+                                {% if book.available_copies <= 0 %}
+                                    <span class="badge rounded-pill bg-danger">
+                                        <i class="fas fa-times-circle me-1"></i> Out of Stock
+                                    </span>
+                                {% elif book.available_copies <= 5 %}
+                                    <span class="badge rounded-pill bg-warning text-dark">
+                                        <i class="fas fa-exclamation-triangle me-1"></i> {{ book.available_copies }} (Low)
+                                    </span>
+                                {% else %}
+                                    <span class="badge rounded-pill bg-success">
+                                        {{ book.available_copies }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            
+                            <td class="text-center">
+                                {% if user.is_authenticated and not user.is_staff and not user.is_superuser %}
+                                    {% if book.available_copies > 0 %}
+                                        {% if book.id in pending_books %}
+                                            <span class="badge bg-info text-dark p-2">
+                                                <i class="fas fa-clock me-1"></i> Request Submitted
+                                            </span>
+                                        {% else %}
+                                            <a href="{% url 'borrow_request' book.id %}" 
+                                               class="btn btn-sm btn-primary fw-semibold"
+                                               title="Request to borrow this book">
+                                                <i class="fas fa-cart-plus me-1"></i> Borrow
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <button class="btn btn-sm btn-outline-secondary disabled" disabled>
+                                            <i class="fas fa-minus-circle me-1"></i> Unavailable
+                                        </button>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="text-muted small">
+                                        {% if not user.is_authenticated %}
+                                            <a href="{% url 'login' %}" class="text-primary text-decoration-none">Login to Borrow</a>
+                                        {% else %}
+                                            (Admin/Staff)
+                                        {% endif %}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            
+                            {% if user.is_staff or user.is_superuser %}
+                                <td class="text-center">
+                                    <a href="{% url 'edit_book' book.id %}" class="btn btn-sm btn-info text-white me-2" title="Edit Book">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="{% url 'delete_book' book.id %}" class="btn btn-sm btn-danger" title="Delete Book"
+                                       onclick="return confirm('Are you sure you want to delete the book: {{ book.title }}?');">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    {% if not books %}
+        <div class="alert alert-warning text-center mt-4 shadow-sm border-0">
+            <i class="fas fa-exclamation-circle me-2"></i> No books are currently listed in the catalogue.
+        </div>
+    {% endif %}
+    
+</div>
+{% endblock %}

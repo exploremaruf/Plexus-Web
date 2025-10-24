@@ -1,0 +1,61 @@
+{% extends "library/base.html" %}
+{% block title %}{{ form_title|default:'Manage Form' }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center pt-4 pb-5">
+    <div class="col-lg-5 col-md-8">
+        <div class="card shadow-lg border-0">
+            <div class="card-body p-sm-5 p-4">
+                
+                <h2 class="card-title text-center mb-4 fw-bold text-dark">
+                    <i class="bi bi-pencil-square me-2 text-primary"></i>
+                    {{ form_title|default:'Form Submission' }}
+                </h2>
+                <p class="text-center text-secondary mb-4 border-bottom pb-3">Please fill out the details below to proceed.</p>
+                
+                <form method="POST" 
+      action="{% if form.instance.pk %}{% url 'edit_book' form.instance.pk %}{% else %}{% url 'add_book' %}{% endif %}">
+                    
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label fw-semibold text-secondary">
+                                {{ field.label }}
+                                {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            
+                            {{ field }} 
+
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger p-2 mt-1 small" role="alert">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ error }}
+                                </div>
+                            {% endfor %}
+
+                            {% if field.help_text %}
+                                <div id="{{ field.id_for_label }}_help" class="form-text text-muted small mt-1">
+                                    {{ field.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="d-grid gap-2 mt-5">
+    <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    {% if form.instance.pk %}UPDATE BOOK{% else %}ADD BOOK{% endif %}
+</button>
+</div>
+
+                    {% if form.instance.pk %}
+<div class="text-center mt-3">
+    <a href="{% url 'book_list' %}" class="text-secondary small text-decoration-none"> 
+        <i class="bi bi-arrow-left"></i> Cancel and go back
+    </a>
+</div>
+{% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
