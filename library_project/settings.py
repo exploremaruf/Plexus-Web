@@ -9,6 +9,8 @@ env = environ.Env(
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 # Security
 # Load SECRET_KEY from environment variable
 SECRET_KEY = env('SECRET_KEY') 
@@ -106,7 +108,4 @@ LOGOUT_REDIRECT_URL = 'login'
 
 # Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-
 
